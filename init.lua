@@ -228,6 +228,23 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- S: relative line numbers
+vim.o.relativenumber = true
+
+-- S: tabs
+vim.o.tabstop = 4
+vim.o.shiftwidth = 4
+
+-- S: format
+vim.keymap.set('n', '<leader>F', ":Format<cr>", { desc = '(S)format file' })
+vim.keymap.set('n', '<leader>f', ":FormatWrite<CR>", { desc = '(S)format file and write' })
+
+-- S: scrolloff
+vim.o.scrolloff = 10
+
+-- S: (write)quit
+vim.keymap.set('n', 'qq', ":q<cr>", { desc = '(S)quit file' })
+vim.keymap.set('n', 'qQ', ":wq<cr>", { desc = '(S)write and quit file' })
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -394,10 +411,11 @@ local on_attach = function(_, bufnr)
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
 
+  -- (S) commented in order to allow formatter.nvim to implement the :Format command
   -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
+  -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
+  --   vim.lsp.buf.format()
+  -- end, { desc = 'Format current buffer with LSP' })
 end
 
 -- Enable the following language servers
