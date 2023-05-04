@@ -70,6 +70,7 @@ require('lazy').setup({
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
 
+  -- (S) commented to disable
   -- Detect tabstop and shiftwidth automatically
   'tpope/vim-sleuth',
 
