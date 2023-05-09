@@ -246,6 +246,9 @@ vim.o.scrolloff = 10
 -- S: (write)quit
 vim.keymap.set('n', 'qq', ":q<cr>", { desc = '(S)quit file' })
 vim.keymap.set('n', 'qQ', ":wq<cr>", { desc = '(S)write and quit file' })
+
+-- S: write
+vim.keymap.set('n', 'öö', ":w<cr>", { desc = '(S)write file' })
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -305,7 +308,7 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
   -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim' },
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'typescript', 'vimdoc', 'vim', 'javascript', 'kotlin' },
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
