@@ -248,7 +248,7 @@ vim.keymap.set('n', 'qq', ":q<cr>", { desc = '(S)quit file' })
 vim.keymap.set('n', 'qQ', ":wq<cr>", { desc = '(S)write and quit file' })
 
 -- S: write
-vim.keymap.set('n', 'öö', ":w<cr>", { desc = '(S)write file' })
+vim.keymap.set('n', '<leader>ö', ":w<cr>", { desc = '(S)write file' })
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience

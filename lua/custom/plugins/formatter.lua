@@ -33,14 +33,17 @@ return {
             }
           end
         },
+        -- javascript = {
+        --   function()
+        --     return {
+        --       exe = "prettierd",
+        --       args = { vim.api.nvim_buf_get_name(0) },
+        --       stdin = true
+        --     }
+        --   end
+        -- },
         javascript = {
-          function()
-            return {
-              exe = "prettierd",
-              args = { vim.api.nvim_buf_get_name(0) },
-              stdin = true
-            }
-          end
+          require("formatter.filetypes.javascript").prettierd
         },
         typescript = {
           require("formatter.filetypes.typescript").prettierd
