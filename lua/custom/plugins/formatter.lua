@@ -48,6 +48,9 @@ return {
         typescript = {
           require("formatter.filetypes.typescript").prettierd
         },
+        javascriptreact = {
+          require("formatter.filetypes.javascriptreact").prettierd
+        },
         html = {
           function()
             return {
