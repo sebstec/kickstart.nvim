@@ -274,6 +274,9 @@ vim.keymap.set('n', 'ä', require('illuminate').goto_next_reference, { desc = 'i
 vim.keymap.set('n', 'ü', require('illuminate').goto_prev_reference, { desc = 'illuminate prev_reference' })
 vim.keymap.set('n', 'Ä', require('illuminate').textobj_select, { desc = 'illuminate textobj_select' })
 
+-- S: go to end of yanked text
+vim.keymap.set('v', 'y', "ygv<c-c>", { noremap = true, silent = true, desc = 'go to end of yanked text' })
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
