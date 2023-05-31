@@ -268,6 +268,12 @@ vim.keymap.set('n', 'qQ', ":wq<cr>", { desc = '(S)write and quit file' })
 
 -- S: write
 vim.keymap.set('n', '<leader>ö', ":w<cr>", { desc = '(S)write file' })
+
+-- S: illuminate
+vim.keymap.set('n', 'ä', require('illuminate').goto_next_reference, { desc = 'illuminate next_reference' })
+vim.keymap.set('n', 'ü', require('illuminate').goto_prev_reference, { desc = 'illuminate prev_reference' })
+vim.keymap.set('n', 'Ä', require('illuminate').textobj_select, { desc = 'illuminate textobj_select' })
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
@@ -433,6 +439,26 @@ local on_attach = function(_, bufnr)
   nmap('<leader>wl', function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end, '[W]orkspace [L]ist Folders')
+
+  -- (S) highlight word under cursor (testing, dont know how to access server_capabilities)
+  -- if server_capabilities.documentHighlightProvider then
+  --   vim.cmd [[
+  --     hi! LspReferenceRead cterm=bold ctermbg=235 guibg=LightYellow
+  --     hi! LspReferenceText cterm=bold ctermbg=235 guibg=LightYellow
+  --     hi! LspReferenceWrite cterm=bold ctermbg=235 guibg=LightYellow
+  --   ]]
+  --   vim.api.nvim_create_augroup('lsp_document_highlight', {})
+  --   vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+  --     group = 'lsp_document_highlight',
+  --     buffer = 0,
+  --     callback = vim.lsp.buf.document_highlight,
+  --   })
+  --   vim.api.nvim_create_autocmd('CursorMoved', {
+  --     group = 'lsp_document_highlight',
+  --     buffer = 0,
+  --     callback = vim.lsp.buf.clear_references,
+  --   })
+  -- end
 
   -- (S) commented in order to allow formatter.nvim to implement the :Format command
   -- Create a command `:Format` local to the LSP buffer
