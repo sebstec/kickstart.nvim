@@ -277,6 +277,11 @@ vim.keymap.set('n', 'Ä', require('illuminate').textobj_select, { desc = 'illumi
 -- S: go to end of yanked text
 vim.keymap.set('v', 'y', "ygv<c-c>", { noremap = true, silent = true, desc = 'go to end of yanked text' })
 
+-- S: search matching { }
+
+vim.keymap.set('n', '+',":echo searchpair('{', '', '}', 'bW', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr><cr>" , { desc = 'search for opening {' })
+vim.keymap.set('n', '#',":echo searchpair('{', '', '}', 'W', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr><cr>" , { desc = 'search for closing }' })
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
