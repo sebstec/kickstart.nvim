@@ -279,8 +279,8 @@ vim.keymap.set('v', 'y', "ygv<c-c>", { noremap = true, silent = true, desc = 'go
 
 -- S: search matching { }
 
-vim.keymap.set('n', '+',":echo searchpair('{', '', '}', 'bW', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr><cr>" , { desc = 'search for opening {' })
-vim.keymap.set('n', '#',":echo searchpair('{', '', '}', 'W', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr><cr>" , { desc = 'search for closing }' })
+vim.keymap.set('n', '+',":echo searchpair('{', '', '}', 'bW', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr>" , { desc = 'search for opening {' })
+vim.keymap.set('n', '#',":echo searchpair('{', '', '}', 'W', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr>" , { desc = 'search for closing }' })
 
 -- [[ Basic Keymaps ]]
 
