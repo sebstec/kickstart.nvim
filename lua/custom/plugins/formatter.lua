@@ -88,8 +88,17 @@ return {
           end
         },
         python = {
-          require("formatter.filetypes.python").black
+          function()
+            return {
+              exe = "/home/sebste/.local/bin/black",
+              args = { vim.api.nvim_buf_get_name(0) },
+              stdin = true
+            }
+          end
         },
+        -- python = {
+        --   require("formatter.filetypes.python").black
+        -- },
         -- Use the special "*" filetype for defining formatter configurations on
         -- any filetype
         ["*"] = {
