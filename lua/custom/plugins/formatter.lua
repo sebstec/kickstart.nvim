@@ -51,6 +51,9 @@ return {
         javascriptreact = {
           require("formatter.filetypes.javascriptreact").prettierd
         },
+        go = {
+          require("formatter.filetypes.go").gofmt
+        },
         html = {
           function()
             return {
