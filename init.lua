@@ -259,6 +259,10 @@ vim.o.shiftwidth = 4
 vim.keymap.set('n', '<leader>F', ":Format<cr>", { desc = '(S)format file' })
 vim.keymap.set('n', '<leader>f', ":FormatWrite<CR>", { desc = '(S)format file and write' })
 
+-- S: LSPformat
+vim.keymap.set('n', '<leader>L', ":LspFormat<cr>", { desc = '(S)format file' })
+vim.keymap.set('n', '<leader>l', ":LspFormat<CR>:w<CR>", { desc = '(S)format file and write' })
+
 -- S: scrolloff
 vim.o.scrolloff = 10
 
@@ -468,11 +472,12 @@ local on_attach = function(_, bufnr)
   --   })
   -- end
 
-  -- (S) commented in order to allow formatter.nvim to implement the :Format command
+  -- (S) commented out order to allow formatter.nvim to implement the :Format command
+  -- (S) commented in order to allow LSP to implement the :LspFormat command
   -- Create a command `:Format` local to the LSP buffer
-  -- vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-  --   vim.lsp.buf.format()
-  -- end, { desc = 'Format current buffer with LSP' })
+  vim.api.nvim_buf_create_user_command(bufnr, 'LspFormat', function(_)
+    vim.lsp.buf.format()
+  end, { desc = 'Format current buffer with LSP' })
 end
 
 -- Enable the following language servers
