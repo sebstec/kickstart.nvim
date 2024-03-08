@@ -71,6 +71,9 @@ require('lazy').setup({
   -- (S) illuminate
   'RRethy/vim-illuminate',
 
+  -- -- (S) formatter 
+  -- 'mhartington/formatter.nvim',
+  --
   -- Git related plugins
   'tpope/vim-fugitive',
   'tpope/vim-rhubarb',
@@ -285,7 +288,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -353,6 +356,7 @@ vim.keymap.set('n', 'qQ', ":wq<cr>", { desc = '(S)write and quit file' })
 
 -- S: write
 vim.keymap.set('n', '<leader>ö', ":w<cr>", { desc = '(S)write file' })
+vim.keymap.set('n', '<leader>o', ":w<cr>", { desc = '(S)write file' })
 
 -- S: illuminate
 vim.keymap.set('n', 'ä', require('illuminate').goto_next_reference, { desc = 'illuminate next_reference' })
@@ -609,9 +613,8 @@ local on_attach = function(_, bufnr)
   --   })
   -- end
 
-  -- (S) commented out order to allow formatter.nvim to implement the :Format command
-  -- (S) commented in order to allow LSP to implement the :LspFormat command
-  -- Create a command `:Format` local to the LSP buffer
+  -- (S) edited in order to allow LSP to implement the :LspFormat command
+  -- Create a command `:LspFormat` local to the LSP buffer
   vim.api.nvim_buf_create_user_command(bufnr, 'LspFormat', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })

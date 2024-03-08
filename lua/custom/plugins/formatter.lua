@@ -73,13 +73,7 @@ return {
           end
         },
         yaml = {
-          function()
-            return {
-              exe = "prettierd",
-              args = { vim.api.nvim_buf_get_name(0) },
-              stdin = true
-            }
-          end
+          require("formatter.filetypes.yaml").prettierd
         },
         json = {
           function()
