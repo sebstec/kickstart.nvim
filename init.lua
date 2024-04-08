@@ -71,7 +71,7 @@ require('lazy').setup({
   -- (S) illuminate
   'RRethy/vim-illuminate',
 
-  -- -- (S) formatter 
+  -- -- (S) formatter
   -- 'mhartington/formatter.nvim',
   --
   -- Git related plugins
@@ -94,7 +94,7 @@ require('lazy').setup({
 
       -- Useful status updates for LSP
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', opts = {} },
+      { 'j-hui/fidget.nvim',       opts = {} },
 
       -- Additional lua configuration, makes nvim stuff amazing!
       'folke/neodev.nvim',
@@ -130,7 +130,7 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim', opts = {} },
+  { 'folke/which-key.nvim',  opts = {} },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -368,8 +368,12 @@ vim.keymap.set('v', 'y', "ygv<c-c>", { noremap = true, silent = true, desc = 'go
 
 -- S: search matching { }
 
-vim.keymap.set('n', '+',":echo searchpair('{', '', '}', 'bW', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr>" , { desc = 'search for opening {' })
-vim.keymap.set('n', '#',":echo searchpair('{', '', '}', 'W', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr>" , { desc = 'search for closing }' })
+vim.keymap.set('n', '+',
+  ":echo searchpair('{', '', '}', 'bW', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr>",
+  { desc = 'search for opening {' })
+vim.keymap.set('n', '#',
+  ":echo searchpair('{', '', '}', 'W', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr>",
+  { desc = 'search for closing }' })
 
 -- [[ Basic Keymaps ]]
 
@@ -484,7 +488,7 @@ vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = 
 vim.defer_fn(function()
   require('nvim-treesitter.configs').setup {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash' },
+    ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'bash', 'templ', 'vue' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
@@ -643,6 +647,11 @@ require('which-key').register({
 require('mason').setup()
 require('mason-lspconfig').setup()
 
+-- If you are using mason.nvim, you can get the ts_plugin_path like this
+local mason_registry = require('mason-registry')
+local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() ..
+'/node_modules/@vue/language-server'
+
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
 --
@@ -657,6 +666,27 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
+  tsserver = {
+    init_options = {
+      plugins = {
+        {
+          name = "@vue/typescript-plugin",
+          location = vue_language_server_path,
+          languages = { "vue" },
+        },
+      },
+    },
+    filetypes = {
+      "vue",
+    },
+  },
+  volar = {
+    init_options = {
+      vue = {
+        hybridMode = false,
+      },
+    },
+  },
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
@@ -690,6 +720,7 @@ mason_lspconfig.setup_handlers {
       on_attach = on_attach,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
+      init_options = (servers[server_name] or {}).init_options,
     }
   end,
 }
@@ -746,7 +777,7 @@ cmp.setup {
   },
 }
 
--- (S) FILETYPES 
+-- (S) FILETYPES
 vim.filetype.add({ extension = { templ = "templ" } })
 
 -- The line beneath this is called `modeline`. See `:help modeline`
