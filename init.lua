@@ -650,7 +650,7 @@ require('mason-lspconfig').setup()
 -- If you are using mason.nvim, you can get the ts_plugin_path like this
 local mason_registry = require('mason-registry')
 local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() ..
-'/node_modules/@vue/language-server'
+    '/node_modules/@vue/language-server'
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -672,13 +672,11 @@ local servers = {
         {
           name = "@vue/typescript-plugin",
           location = vue_language_server_path,
-          languages = { "vue" },
+          languages = { "vue", 'typescript' },
         },
       },
     },
-    filetypes = {
-      "vue",
-    },
+    filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
   },
   volar = {
     init_options = {
