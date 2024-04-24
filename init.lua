@@ -375,6 +375,9 @@ vim.keymap.set('n', '#',
   ":echo searchpair('{', '', '}', 'W', 'synIDattr(synID(line(\".\"), col(\".\"), 0), \"name\") =~? \"string\"')<cr>",
   { desc = 'search for closing }' })
 
+-- S: write and makefile
+vim.keymap.set('n', '<leader>p', ":w<cr>:!make<cr>", { desc = '(S)write file and makefile' })
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
