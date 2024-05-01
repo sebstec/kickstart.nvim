@@ -102,6 +102,15 @@ return {
             }
           end
         },
+        templ = {
+          function()
+            return {
+              exe = "templ fmt -stdout",
+              args = { vim.api.nvim_buf_get_name(0) },
+              stdin = true
+            }
+          end
+        },
         -- python = {
         --   require("formatter.filetypes.python").black
         -- },

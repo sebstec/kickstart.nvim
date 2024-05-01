@@ -304,10 +304,12 @@ vim.wo.number = true
 -- Enable mouse mode
 vim.o.mouse = 'a'
 
--- Sync clipboard between OS and Neovim.
---  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+-- -- Sync clipboard between OS and Neovim.
+-- --  Remove this option if you want your OS clipboard to remain independent.
+-- --  See `:help 'clipboard'`
+-- vim.o.clipboard = 'unnamedplus'
+-- use unnamed register and not sync
+vim.o.clipboard = ''
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -376,7 +378,11 @@ vim.keymap.set('n', '#',
   { desc = 'search for closing }' })
 
 -- S: write and makefile
-vim.keymap.set('n', '<leader>p', ":w<cr>:!make<cr>", { desc = '(S)write file and makefile' })
+vim.keymap.set('n', '<leader>O', ":w<cr>:!make<cr>", { desc = '(S)write file and makefile' })
+
+-- S: paste and copy system clipboard
+vim.keymap.set('n', '<leader>y', "\"+y", { desc = '(S)yank to system clipboard (+ reg)' })
+vim.keymap.set('n', '<leader>p', "\"+p", { desc = '(S)paste from system clipboard (+ reg)' })
 
 -- [[ Basic Keymaps ]]
 
