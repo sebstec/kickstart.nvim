@@ -381,8 +381,8 @@ vim.keymap.set('n', '#',
 vim.keymap.set('n', '<leader>O', ":w<cr>:!make<cr>", { desc = '(S)write file and makefile' })
 
 -- S: paste and copy system clipboard
-vim.keymap.set('n', '<leader>y', "\"+y", { desc = '(S)yank to system clipboard (+ reg)' })
-vim.keymap.set('n', '<leader>p', "\"+p", { desc = '(S)paste from system clipboard (+ reg)' })
+vim.keymap.set({ 'n', 'v' }, '<leader>y', '"+y', { desc = '(S)yank to system clipboard (+ reg)' })
+vim.keymap.set({ 'n', 'v' }, '<leader>p', '"+p', { desc = '(S)paste from system clipboard (+ reg)' })
 
 -- [[ Basic Keymaps ]]
 
