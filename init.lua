@@ -87,20 +87,20 @@ require('lazy').setup({
   --  The configuration is done below. Search for lspconfig to find it below.
 
   -- LSP Plugins
-  -- TODO:  (S) add lazydev after update to fedora 40
-  -- {
-  --   -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
-  --   -- used for completion, annotations and signatures of Neovim apis
-  --   'folke/lazydev.nvim',
-  --   ft = 'lua',
-  --   opts = {
-  --     library = {
-  --       -- Load luvit types when the `vim.uv` word is found
-  --       { path = 'luvit-meta/library', words = { 'vim%.uv' } },
-  --     },
-  --   },
-  -- },
-  -- { 'Bilal2453/luvit-meta', lazy = true },
+  --(S) added lazydev after update to fedora 40
+  {
+    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+    -- used for completion, annotations and signatures of Neovim apis
+    'folke/lazydev.nvim',
+    ft = 'lua',
+    opts = {
+      library = {
+        -- Load luvit types when the `vim.uv` word is found
+        { path = 'luvit-meta/library', words = { 'vim%.uv' } },
+      },
+    },
+  },
+  { 'Bilal2453/luvit-meta',  lazy = true },
 
   {
     -- LSP Configuration
@@ -118,7 +118,8 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
 
       -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
+      -- (S) disabled as of 0.10 (lazydev instead)
+      -- 'folke/neodev.nvim',
     },
   },
 
@@ -340,7 +341,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim',    opts = {} },
+  { 'numToStr/Comment.nvim', opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -788,7 +789,8 @@ local servers = {
 }
 
 -- Setup neovim lua configuration
-require('neodev').setup()
+-- (S) disabled as of 0.10 (lazydev instead)
+-- require('neodev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
 local capabilities = vim.lsp.protocol.make_client_capabilities()
