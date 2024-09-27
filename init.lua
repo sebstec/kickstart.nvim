@@ -757,22 +757,22 @@ local servers = {
   -- pyright = {},
   -- rust_analyzer = {},
   -- tsserver = {},
-  tsserver = {
+  ts_ls = {
     init_options = {
       plugins = {
         {
           name = "@vue/typescript-plugin",
           location = vue_language_server_path,
-          languages = { "vue", 'typescript' },
+          languages = { "vue" },
         },
       },
     },
-    filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx" }
+    filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" }
   },
   volar = {
     init_options = {
       vue = {
-        hybridMode = false,
+        hybridMode = true,
       },
     },
   },
