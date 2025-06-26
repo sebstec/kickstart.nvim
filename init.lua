@@ -450,7 +450,7 @@ vim.keymap.set('n', '<leader>L', ":LspFormat<cr>", { desc = '(S)format file' })
 vim.keymap.set('n', '<leader>l', ":LspFormat<CR>:w<CR>", { desc = '(S)format file and write' })
 
 -- S: scrolloff
-vim.o.scrolloff = 10
+vim.o.scrolloff = 12
 
 -- S: (write)quit
 vim.keymap.set('n', 'qq', ":q<cr>", { desc = '(S)quit file' })
@@ -767,15 +767,9 @@ local servers = {
         },
       },
     },
-    filetypes = { "javascript", "javascriptreact", "javascript.jsx", "typescript", "typescriptreact", "typescript.tsx", "vue" }
+    filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue" }
   },
-  volar = {
-    init_options = {
-      vue = {
-        hybridMode = true,
-      },
-    },
-  },
+  volar = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
   lua_ls = {
