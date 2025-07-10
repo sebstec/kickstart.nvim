@@ -1,6 +1,0 @@
-tags
-test.sh
-.luarc.json
-nvim
-lua/custom/plugins/node_modules
-lua/custom/plugins/package-lock.json
