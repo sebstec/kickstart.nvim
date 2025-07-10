@@ -46,7 +46,7 @@ return {
       -- If nil, vim-illuminate will be disabled for large files.
       large_file_overrides = nil,
       -- min_count_to_highlight: minimum number of matches required to perform highlighting
-      min_count_to_highlight = 1,
+      min_count_to_highlight = 2,
     })
   end,
 }
