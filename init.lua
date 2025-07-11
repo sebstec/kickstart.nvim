@@ -90,12 +90,15 @@ vim.cmd 'colorscheme retrobox'
 -- (S) templ filetype
 vim.filetype.add { extension = { templ = 'templ' } }
 
--- S: relative line numbers
+-- (S) relative line numbers
 vim.o.relativenumber = true
 
--- S: tabs
+-- (S) tabs
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
+
+-- (S)
+vim.o.scroll = 8
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -231,6 +234,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
     vim.hl.on_yank()
   end,
+})
+
+-- command = "set guicursor=a:hor20"
+-- command = "set guicursor=a:block"
+-- :h guicursor for more details
+vim.api.nvim_create_autocmd({"VimLeave"},{
+    group = vim.api.nvim_create_augroup( "restore_cursor_shape_on_exit", { clear = true }),
+    desc = "restore the cursor shape on exit of neovim",
+    command = "set guicursor=a:hor20",
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
