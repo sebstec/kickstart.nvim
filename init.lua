@@ -825,7 +825,8 @@ require('lazy').setup({
         javascriptreact = { "prettierd", "prettier", stop_after_first = true },
         astro = { "prettierd", "prettier", stop_after_first = true },
         css = { "prettierd", "prettier", stop_after_first = true },
-        sh = {"shfmt", stop_after_first = true }
+        sh = {"shfmt", stop_after_first = true },
+        yaml = {"yamlfmt", "prettierd", stop_after_first = true}
       },
       formatters = {
         shfmt = {
