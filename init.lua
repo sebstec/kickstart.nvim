@@ -785,16 +785,16 @@ require('lazy').setup({
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = '[F]ormat buffer with conform',
       },
       {
         '<leader>F',
         function()
-          require('conform').format { async = false, lsp_format = 'fallback' }
-          vim.cmd 'write'
+          require('conform').format { async = false, lsp_format = 'prefer' }
+          -- vim.cmd 'write'
         end,
         mode = '',
-        desc = '[F]ormat buffer and save',
+        desc = '[F]ormat buffer with LSP',
       },
     },
     opts = {
@@ -821,12 +821,15 @@ require('lazy').setup({
         python = { "ruff","isort", "black", stop_after_first = true },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { "prettierd", "prettier", stop_after_first = true },
-        javascriptreact = { "prettierd", "prettier", stop_after_first = true },
-        astro = { "prettierd", "prettier", stop_after_first = true },
-        css = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { "prettier", stop_after_first = true },
+        javascriptreact = { "prettier", stop_after_first = true },
+        typescript = { "prettier", stop_after_first = true },
+        typescriptreact = { "prettier", stop_after_first = true },
+        astro = { "prettier", stop_after_first = true },
+        css = { "prettier", stop_after_first = true },
         sh = {"shfmt", stop_after_first = true },
-        yaml = {"yamlfmt", "prettierd", stop_after_first = true}
+        yaml = {"yamlfmt", "prettier", stop_after_first = true},
+        ["_"] = { "trim_whitespace", "prettier" }
       },
       formatters = {
         shfmt = {
