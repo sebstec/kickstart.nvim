@@ -242,10 +242,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 -- command = "set guicursor=a:hor20"
 -- command = "set guicursor=a:block"
 -- :h guicursor for more details
-vim.api.nvim_create_autocmd({"VimLeave"},{
-    group = vim.api.nvim_create_augroup( "restore_cursor_shape_on_exit", { clear = true }),
-    desc = "restore the cursor shape on exit of neovim",
-    command = "set guicursor=a:hor20",
+vim.api.nvim_create_autocmd({ 'VimLeave' }, {
+  group = vim.api.nvim_create_augroup('restore_cursor_shape_on_exit', { clear = true }),
+  desc = 'restore the cursor shape on exit of neovim',
+  command = 'set guicursor=a:hor20',
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -464,7 +464,11 @@ require('lazy').setup({
       local builtin = require 'telescope.builtin'
       vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>sf', function()
+        builtin.find_files {
+          hidden = true,
+        }
+      end, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
       vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
       vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
@@ -818,24 +822,29 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        python = { "ruff","isort", "black", stop_after_first = true },
-        --
+        python = function(bufnr)
+          if require('conform').get_formatter_info('ruff_format', bufnr).available then
+            return { 'ruff_format' }
+          else
+            return { 'isort', 'black' }
+          end
+        end,
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        javascript = { "prettier", stop_after_first = true },
-        javascriptreact = { "prettier", stop_after_first = true },
-        typescript = { "prettier", stop_after_first = true },
-        typescriptreact = { "prettier", stop_after_first = true },
-        astro = { "prettier", stop_after_first = true },
-        css = { "prettier", stop_after_first = true },
-        sh = {"shfmt", stop_after_first = true },
-        yaml = {"yamlfmt", "prettier", stop_after_first = true},
-        ["_"] = { "trim_whitespace", "prettier" }
+        javascript = { 'prettier', stop_after_first = true },
+        javascriptreact = { 'prettier', stop_after_first = true },
+        typescript = { 'prettier', stop_after_first = true },
+        typescriptreact = { 'prettier', stop_after_first = true },
+        astro = { 'prettier', stop_after_first = true },
+        css = { 'prettier', stop_after_first = true },
+        sh = { 'shfmt', stop_after_first = true },
+        yaml = { 'yamlfmt', 'prettier', stop_after_first = true },
+        ['_'] = { 'trim_whitespace', 'prettier' },
       },
       formatters = {
         shfmt = {
-          append_args = {"-i", "2"}
-        }
-      }
+          append_args = { '-i', '2' },
+        },
+      },
     },
   },
 
