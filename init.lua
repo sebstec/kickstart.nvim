@@ -838,7 +838,7 @@ require('lazy').setup({
         css = { 'prettier', stop_after_first = true },
         sh = { 'shfmt', stop_after_first = true },
         yaml = { 'yamlfmt', 'prettier', stop_after_first = true },
-        ['_'] = { 'trim_whitespace', 'prettier' },
+        -- ['_'] = { 'trim_whitespace', 'prettier' },
       },
       formatters = {
         shfmt = {
@@ -1186,3 +1186,12 @@ vim.keymap.set({ 'n', 'v' }, '<leader>y', '"+y', { desc = '(S)yank to system cli
 vim.keymap.set({ 'n', 'v' }, '<leader>p', '"+p', { desc = '(S)paste from system clipboard (+ reg)' })
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- S: reload current file (after newly created)
+vim.api.nvim_create_user_command('ReloadBuf', function()
+  vim.cmd 'filetype detect'
+  vim.cmd 'syntax on'
+  vim.cmd 'LspRestart'
+  vim.cmd 'TSBufEnable all'
+end, {})
+vim.keymap.set({ 'n' }, '<leader>R', ':ReloadBuf<cr>', { desc = '(S)reload Filetype,Syntax-HL,LSP,TS for current buffer' })
