@@ -96,6 +96,7 @@ vim.o.relativenumber = true
 -- (S) tabs
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
+vim.o.expandtab = true
 
 -- (S)
 vim.o.scroll = 8
@@ -277,7 +278,6 @@ rtp:prepend(lazypath)
 require('lazy').setup({
 
   -- (S) illuminate (in custom plugins)
-  -- 'RRethy/vim-illuminate',
 
   -- (S) fugitive
   'tpope/vim-fugitive',
@@ -787,6 +787,7 @@ require('lazy').setup({
         '<leader>f',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
+          vim.cmd 'retab'
         end,
         mode = '',
         desc = '[F]ormat buffer with conform',
@@ -795,6 +796,7 @@ require('lazy').setup({
         '<leader>F',
         function()
           require('conform').format { async = false, lsp_format = 'prefer' }
+          vim.cmd 'retab'
           -- vim.cmd 'write'
         end,
         mode = '',
@@ -838,11 +840,12 @@ require('lazy').setup({
         css = { 'prettier', stop_after_first = true },
         sh = { 'shfmt', stop_after_first = true },
         yaml = { 'yamlfmt', 'prettier', stop_after_first = true },
+        markdown = { 'trim_whitespace', 'prettier' },
         -- ['_'] = { 'trim_whitespace', 'prettier' },
       },
       formatters = {
         shfmt = {
-          append_args = { '-i', '2' },
+          append_args = { '-i', '4' },
         },
       },
     },
@@ -1062,22 +1065,80 @@ require('lazy').setup({
   },
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    lazy = false,
     build = ':TSUpdate',
-    main = 'nvim-treesitter.configs', -- Sets main module to use for opts
-    -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-    opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
-      auto_install = true,
-      highlight = {
-        enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
-      },
-      indent = { enable = true, disable = { 'ruby' } },
-    },
+    branch = 'main',
+    config = function()
+      require('nvim-treesitter').setup()
+      require('nvim-treesitter').install {
+        'bash',
+        'c',
+        'diff',
+        'html',
+        'latex',
+        'lua',
+        'luadoc',
+        'markdown',
+        'markdown_inline',
+        'query',
+        'vim',
+        'vimdoc',
+        'javascript',
+        'typescript',
+        'python',
+        'php',
+      }
+      local group = vim.api.nvim_create_augroup('treesitter-highlight', { clear = true })
+      local notified_missing = {}
+      local function notify_missing_parser(lang, filetype)
+        if notified_missing[lang] then
+          return
+        end
+        notified_missing[lang] = true
+        vim.notify(
+          string.format('Treesitter parser for "%s" (filetype: %s) not installed. Run :TSInstall %s', lang, filetype, lang),
+          vim.log.levels.WARN,
+          { title = 'nvim-treesitter' }
+        )
+      end
+      local function start_ts(buf)
+        buf = buf or vim.api.nvim_get_current_buf()
+        if not vim.api.nvim_buf_is_valid(buf) or not vim.api.nvim_buf_is_loaded(buf) then
+          return
+        end
+        local ft = vim.bo[buf].filetype
+        if ft == '' then
+          return
+        end
+        local lang = vim.treesitter.language.get_lang(ft)
+        if not lang then
+          return
+        end
+        local ts = require 'nvim-treesitter'
+        local installed = ts.get_installed()
+        if vim.tbl_contains(installed, lang) then
+          pcall(vim.treesitter.start, buf)
+          return
+        end
+        local available = ts.get_available()
+        if vim.tbl_contains(available, lang) then
+          notify_missing_parser(lang, ft)
+        end
+      end
+      vim.api.nvim_create_autocmd('FileType', {
+        group = group,
+        callback = function(args)
+          start_ts(args.buf)
+        end,
+      })
+      -- catch buffer already open when plugin loads (e.g. nvim file.py)
+      vim.api.nvim_create_autocmd('BufEnter', {
+        group = group,
+        callback = function(args)
+          start_ts(args.buf)
+        end,
+      })
+    end,
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
     --
@@ -1144,11 +1205,15 @@ require('lazy').setup({
 -- vim.keymap.set('n', '<leader>L', ':LspFormat<cr>', { desc = '(S)format file' })
 -- vim.keymap.set('n', '<leader>l', ':LspFormat<CR>:w<CR>', { desc = '(S)format file and write' })
 
+-- S: overwrite the file instead of creating new file and moving
+-- Use copy instead of rename to preserve inode
+vim.opt.backupcopy = 'yes'
+
 -- S: scrolloff
 vim.o.scrolloff = 12
 
 -- S: (write)quit
-vim.keymap.set('n', 'qq', ':q<cr>', { desc = '(S)quit file' })
+vim.keymap.set('n', 'Q', ':q<cr>', { desc = '(S)quit file' })
 vim.keymap.set('n', 'qQ', ':wq<cr>', { desc = '(S)write and quit file' })
 
 -- S: write
@@ -1190,8 +1255,18 @@ vim.keymap.set({ 'n', 'v' }, '<leader>p', '"+p', { desc = '(S)paste from system 
 -- S: reload current file (after newly created)
 vim.api.nvim_create_user_command('ReloadBuf', function()
   vim.cmd 'filetype detect'
-  vim.cmd 'syntax on'
-  vim.cmd 'LspRestart'
-  vim.cmd 'TSBufEnable all'
+  local lang = vim.treesitter.language.get_lang(vim.bo.filetype)
+  if lang and vim.tbl_contains(require('nvim-treesitter').get_installed(), lang) then
+    pcall(vim.treesitter.start, 0)
+  else
+    vim.cmd 'syntax on'
+  end
+  vim.cmd 'lsp restart'
 end, {})
 vim.keymap.set({ 'n' }, '<leader>R', ':ReloadBuf<cr>', { desc = '(S)reload Filetype,Syntax-HL,LSP,TS for current buffer' })
+
+
+-- S: render markdown preview
+vim.keymap.set({ 'n', 'v' }, '<leader>re', ':RenderMarkdown<cr>', { desc = '(S)enable render markdown' })
+vim.keymap.set({ 'n', 'v' }, '<leader>rd', ':RenderMarkdown disable<cr>', { desc = '(S)disable render markdown' })
+vim.keymap.set({ 'n', 'v' }, '<leader>rp', ':RenderMarkdown preview<cr>', { desc = '(S)preview render markdown' })
