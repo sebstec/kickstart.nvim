@@ -84,6 +84,22 @@ I hope you enjoy your Neovim journey,
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
 --
+-- (S) sandbox: no host clipboard provider, so copy via OSC 52 and never read it back
+if vim.env.NVIM_SANDBOX then
+  local osc52 = require 'vim.ui.clipboard.osc52'
+  vim.g.clipboard = {
+    name = 'OSC 52 (copy only)',
+    copy = { ['+'] = osc52.copy '+', ['*'] = osc52.copy '*' },
+    paste = {
+      ['+'] = function()
+        return { vim.fn.split(vim.fn.getreg '', '\n'), vim.fn.getregtype '' }
+      end,
+      ['*'] = function()
+        return { vim.fn.split(vim.fn.getreg '', '\n'), vim.fn.getregtype '' }
+      end,
+    },
+  }
+end
 -- (S) custom theme
 vim.cmd 'colorscheme retrobox'
 
@@ -263,6 +279,40 @@ end
 ---@type vim.Option
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
+
+vim.g.ts_parsers = {
+  'bash',
+  'c',
+  'diff',
+  'html',
+  'latex',
+  'lua',
+  'luadoc',
+  'markdown',
+  'markdown_inline',
+  'query',
+  'vim',
+  'vimdoc',
+  'javascript',
+  'typescript',
+  'python',
+  'php',
+  'tmux',
+  'json',
+  'toml',
+  'gitcommit',
+  'tsx',
+  'editorconfig',
+  'hcl',
+  'tsv',
+  'zsh',
+  'terraform',
+  'yaml',
+  'csv',
+  'gitignore',
+  'dockerfile',
+  -- add every language you actually open offline: go, json, yaml, css, vue, templ ...
+}
 
 -- [[ Configure and install plugins ]]
 --
@@ -756,9 +806,36 @@ require('lazy').setup({
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format Lua code
+        -- formatters
+        'stylua',
+        'prettier',
+        'shfmt',
+        'ruff',
+        'black',
+        -- language servers
+        'ansible-language-server',
+        'astro-language-server',
+        'bash-language-server',
+        'css-lsp',
+        'dockerfile-language-server',
+        'gh-actions-language-server',
+        'html-lsp',
+        'intelephense',
+        'json-lsp',
+        -- 'lua-language-server',
+        'postgres-language-server',
+        'pyright',
+        'tailwindcss-language-server',
+        'terraform-ls',
+        'texlab',
+        'typescript-language-server',
+        'vue-language-server',
+        'yaml-language-server',
       })
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup {
+        ensure_installed = ensure_installed,
+        run_on_start = not vim.env.NVIM_SANDBOX,
+      }
 
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
@@ -1070,24 +1147,9 @@ require('lazy').setup({
     branch = 'main',
     config = function()
       require('nvim-treesitter').setup()
-      require('nvim-treesitter').install {
-        'bash',
-        'c',
-        'diff',
-        'html',
-        'latex',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'query',
-        'vim',
-        'vimdoc',
-        'javascript',
-        'typescript',
-        'python',
-        'php',
-      }
+      if not vim.env.NVIM_SANDBOX then
+        require('nvim-treesitter').install(vim.g.ts_parsers)
+      end
       local group = vim.api.nvim_create_augroup('treesitter-highlight', { clear = true })
       local notified_missing = {}
       local function notify_missing_parser(lang, filetype)
@@ -1264,7 +1326,6 @@ vim.api.nvim_create_user_command('ReloadBuf', function()
   vim.cmd 'lsp restart'
 end, {})
 vim.keymap.set({ 'n' }, '<leader>R', ':ReloadBuf<cr>', { desc = '(S)reload Filetype,Syntax-HL,LSP,TS for current buffer' })
-
 
 -- S: render markdown preview
 vim.keymap.set({ 'n', 'v' }, '<leader>re', ':RenderMarkdown<cr>', { desc = '(S)enable render markdown' })
