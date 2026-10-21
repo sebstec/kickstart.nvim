@@ -311,6 +311,7 @@ vim.g.ts_parsers = {
   'csv',
   'gitignore',
   'dockerfile',
+  'css',
   -- add every language you actually open offline: go, json, yaml, css, vue, templ ...
 }
 
